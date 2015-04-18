@@ -1,0 +1,13 @@
+<IfModule mod_rewrite.c>
+RewriteEngine on
+RewriteBase /
+
+RewriteCond %{REQUEST_URI} !(core\/|images\/|files\/|templates\.js$|\.css$|\.jpg$|\.png$|\.ico)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^$ core.php?page=game [PT,L,QSA]
+RewriteRule ^([^/]+)$ core.php?page=$1 [PT,L,QSA]
+RewriteRule ^game/([^/]+)$ core.php?page=game&gameID=$1 [PT,L,QSA]
+RewriteRule ^player/([^/]+)$ core.php?page=player&playerID=$1 [PT,L,QSA]
+</IfModule>
+
+Options -Indexes
