@@ -1,0 +1,74 @@
+@charset "utf-8";
+
+body {
+	float:left;
+	width:100%;
+	margin:0;
+	padding:0;
+	line-height:1.4;
+	font-size:13px;
+	font-family:"Open Sans", Verdana, Geneva, sans-serif;
+	background:none #ead5d5;
+	color:#b00;
+	text-align:center;
+	margin-top:30px;
+	font-family:"Give You Glory";
+}
+
+h1 {
+	font-size:400%;
+	margin:0;
+	padding:0;
+	line-height:1;
+}
+
+p.subtitle {
+	margin:0 0 20px 0;
+	padding:0;
+	font-size:140%;
+}
+
+.exception_panel {
+	width:800px;
+	float:left;
+	margin:20px 0 0 -400px;
+	padding:0 0 0 50%;
+	text-align:left;
+	font-family:"Open Sans", Verdana, Geneva, sans-serif;
+}
+
+.exception_panel p.message,
+.exception_panel pre.trace {
+	padding:20px;
+	margin:0;
+	float:left;
+	width:100%;
+	box-sizing:border-box;
+}
+
+.exception_panel p.message {
+	font-size:130%;
+	background:none #fff;
+	border-radius:3px 3px 0 0;
+}
+
+.exception_panel pre.trace {
+	background:none #f3ecec;
+	border-radius:0 0 3px 3px;
+}
+
+#credits {
+	width:100%;
+	float:left;
+	padding:20px 0;
+	opacity:0.5;
+}
+
+#credits a {
+	color:#b00;
+	text-decoration:none;
+}
+
+#credits a:hover {
+	text-decoration:underline;
+}

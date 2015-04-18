@@ -1,0 +1,282 @@
+@charset "utf-8";
+
+body {
+	float:left;
+	width:100%;
+	margin:0;
+	padding:0;
+	line-height:1.4;
+	font-size:13px;
+	font-family:"Open Sans", Verdana, Geneva, sans-serif;
+}
+
+#head {
+	height:50px;
+	width:100%;
+	position:fixed;
+	z-index:900;
+	top:0;
+	left:0;
+	line-height:50px;
+	float:left;
+	background:none #111;
+	color:#fff;
+}
+
+#head h1, 
+#head h2 {
+	margin:0 20px;
+	padding:0;
+	font-family:"Give You Glory";
+	height:50px;
+	line-height:60px;
+	float:left;
+	overflow:hidden;
+}
+
+#head h1 {
+	font-size:250%;
+}
+
+#head h2 {
+	font-size:130%;
+}
+
+#head .player {
+	float:right;
+	margin:0 20px;
+	height:50px;
+	overflow:hidden;
+}
+
+#head .player .picture {
+	width:70px;
+	height:70px;
+	border-radius:70px;
+	background:none #069;
+	float:left;
+	margin:-10px 10px 0 0;
+}
+
+#head .player .name {
+	float:left;
+	margin:0;
+	padding:0;
+	font-size:120%;
+}
+
+#head .player .name p {
+	margin:0; 
+	padding:0;
+}
+
+#panel {
+	width:300px;
+	position:fixed;
+	top:50px;
+	right:0;
+	height:100%;
+	overflow:auto;
+	background:none #222;
+	color:#eee;
+}
+
+#panel .playerlist,
+#panel .playerlist li {
+	width:100%;
+	float:left;
+	margin:0;
+	padding:0;
+	list-style:none;
+}
+
+#panel .playerlist li {
+	font-size:120%;
+}
+
+#panel .playerlist li.player_current {
+	background:none #393;
+}
+
+#panel .playerlist li .border {
+	padding:7px 20px;
+}
+
+#panel .playerlist span.status {
+	opacity:0.5;
+	margin:0 0 0 10px;
+}
+
+#panel .playerlist .score {
+	float:right;
+	font-size:120%;
+	font-weight:bold;
+	opacity:0.5;
+}
+
+#panel h3 {
+	margin:0;
+	padding:0;
+	font-size:180%;
+	font-weight:bold;
+	vertical-align:middle;
+}
+
+span.small {
+	font-weight:normal;
+	font-size:60%;
+}
+
+#panel h3 span.small {
+	margin:0 0 0 10px;
+}
+
+a.button {
+	float:left;
+	padding:12px;
+	border-radius:3px;
+	background:none #369;
+	color:#fff;
+	text-decoration:none;
+	margin:0 10px 0 0;
+}
+
+a.button:hover {
+	background:none #368;
+}
+
+.border {
+	float:left;
+	padding:20px;
+	box-sizing:border-box;
+	width:100%;
+}
+
+#field {
+	background:none #292929;
+	position:fixed;
+	width:100%;
+	height:100%;
+	top:50px;
+	right:300px;
+	overflow:auto;
+}
+
+#field ul,
+#field li {
+	float:left;
+	list-style:none;
+	padding:0;
+	margin:0;
+	box-sizing:border-box;
+}
+
+#field li {
+	width:70px;
+	height:70px;
+	font-size:60%;
+	line-height:70px;
+	text-align:center;
+	clear:both;
+	margin:1px;
+	position:relative;
+}
+
+#field span,
+#field a {
+	display:block;
+	width:100%;
+	height:100%;
+	background:#eee;
+	position:relative;
+}
+
+#field a,
+#field span.stone_noplayer,
+#field span.stone_player_1,
+#field span.stone_player_2 {
+	overflow:hidden;
+	text-indent:-999px;
+}
+
+#field a {
+	background:#eee;
+	opacity:0.05;
+}
+
+#field ul:hover a {
+	opacity:0.1;
+}
+
+#field span.stone_noplayer {
+	background:#eee;
+	opacity:0.02;
+}
+
+#field span.stone_player_1 {
+	background:none #900;
+}
+
+#field span.stone_player_2 {
+	background:none #088;
+}
+
+#field span.stone_winner_2 {
+	background:none #0cc;
+}
+
+#field span.stone_winner:after {
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	display:block;
+	background:#fff;
+	opacity:0.4;
+	content:"WON";
+}
+
+#credits {
+	position:fixed;
+	padding:20px;
+	bottom:0;
+	right:0;
+	opacity:0.5;
+	font-family:"Give You Glory";
+	z-index:1000;
+	color:#fff;
+}
+
+#credits p {
+	margin:0;
+	padding:0;
+}
+
+#credits a {
+	color:#fff;
+	text-decoration:none;
+}
+
+#credits a:hover {
+	text-decoration:underline;
+}
+
+#winner_overlay {
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	z-index:1000;
+	background:#292929;
+	opacity:0.7;
+	text-align:center;
+	color:#fff;
+	font-size:200%;
+	font-family:"Give You Glory";
+}
+
+#winner_overlay h3 {
+	font-size:350%;
+}
