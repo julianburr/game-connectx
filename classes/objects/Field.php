@@ -25,7 +25,7 @@ class Field {
 		$this->setPlayer($player);
 	}
 	
-	public function setPlayer(Player $player){
+	public function setPlayer($player){
 		/**
 		 * Assigns player to field
 		 * 

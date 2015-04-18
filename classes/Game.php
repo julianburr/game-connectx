@@ -357,7 +357,7 @@ class Game {
 		return $this->fieldset;	
 	}
 	
-	public function setField($row, Player $player){
+	public function setField($row, $player){
 		/**
 		 * Assigns player to field
 		 * Also checks its the players turn or not
@@ -365,7 +365,7 @@ class Game {
 		 * Parameters:
 		 * row: x coordinate in which the player should be added 
 		 *		(y coordinate will be determined automatically)
-		 * player: player object to be assigned to field
+		 * player: id of to be assigned to field
 		 **/
 		$stone_set = false;
 		if($player != $this->players[$this->current_player_key]->getID()){
@@ -587,13 +587,6 @@ class Game {
 		 * Get array of connected winning fields 
 		 **/
 		return $this->winner_fields;
-	}
-	
-	public function getCanonicalURL(){
-		/**
-		 * Get games canonical url
-		 **/
-		return "game.php?gameID=" . $this->id . "&playerID=" . $_REQUEST['playerID']; //For test purpose incl. player id
 	}
 	
 	public function getLastAction(){

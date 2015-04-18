@@ -21,22 +21,98 @@ class ConnectX {
 	public $session = null;
 	public $game = null;
 	
-	private $request = null;
-	private $get = null;
-	private $post = null;
+	public $request = null;
+	public $get = null;
+	public $post = null;
 	
-	public function __construct($game_id){
+	private $htaccess = false;
+	
+	private $action_response = array();
+	
+	public function __construct(){
 		/**
-		 * Inits session, request attributes and game if id is given
+		 * Set request parameters and check htaccess file
 		 **/
-		$this->session = new Session();
 		$this->request = $_REQUEST;
 		$this->get = $_GET;
 		$this->post = $_POST;
-		if($game_id){
-			$this->game = new Game($game_id);	
+		$this->checkHtaccess();
+	}
+	
+	public function init($game_id=null){
+		/**
+		 * Inits session and game, if game id is given
+		 **/
+		$this->session = new Session();
+	}
+	
+	public function getCanonicalURL(){
+		/**
+		 * Returns canonical url for current page
+		 **/
+		$url = $this->getProtocol() . "://" . $this->getDomain() . "/";
+		if($this->htaccess){
+			if(isset($this->get['gameID'])){
+				$url .= "game/{$this->get['gameID']}";
+			}
+		} else {
+			$url .= $this->getRootDir() . "/core.php";
+			$sep = "?";
+			if(isset($this->get['gameID'])){
+				$url .= $sep . "page=game&gameID=" . $this->get['gameID'];
+			}
 		}
-		$this->executeActions();
+		return $url;
+	}
+	
+	public function checkHtaccess(){
+		/**
+		 * Checks if .htaccess is set up and if game is in root dir
+		 * Sets $this->htaccess (boolean)
+		 * Needed for canonical URL generator
+		 **/
+		$this->htaccess = false;
+		if(realpath(dirname(__DIR__ . "/../core.php")) == realpath($_SERVER['DOCUMENT_ROOT']) && is_file(__DIR__ . "/../.htaccess")){
+			$this->htaccess = true;
+		}
+	}
+	
+	public function getBaseURL(){
+		/**
+		 * Returns current URL base to be used e.g. for links or css refs
+		 **/
+		if($this->htaccess){
+			return "/";
+		}
+		return "";
+	}
+	
+	public function getRootDir(){
+		/**
+		 * Determines root dir of core file
+		 **/
+		return str_replace(realpath($_SERVER['DOCUMENT_ROOT']), "", realpath(dirname(__DIR__ . "/../core.php")));
+	}
+	
+	public function getProtocol(){
+		/**
+		 * Returns protocol of current http request
+		 **/
+		return "http"; //TODO
+	}
+	
+	public function getDomain(){
+		/**
+		 * Determines domain basis of current request
+		 **/
+		return $_SERVER['SERVER_NAME'];
+	}
+	
+	public function setGame($id){
+		/**
+		 * Assigns game to core instance
+		 **/
+		$this->game = new Game($id);
 	}
 	
 	public function loadGame($id){
@@ -53,7 +129,7 @@ class ConnectX {
 		return $this->game;
 	}
 	
-	private function executeActions(){
+	public function executeActions(){
 		/**
 		 * Execute actions
 		 * Action names will be fetched from HTTP request parameter do
@@ -67,16 +143,33 @@ class ConnectX {
 		}
 		
 		foreach($this->request['do'] as $action){
-			$action = "action_" . $action;
-			if(method_exists($this, $action)){
-				$this->$action();
-				if($this->session->me->getID()){
-					$sql = new SqlManager();
-					$new = array( "action_date" => date("Y-m-d H:i:s", time()), "action_name" => $action, "action_game" => $this->game->getID(), "action_player" => $this->session->me->getID() );
-					$sql->insert("action", $new);
-				}
+			$this->action_response = array();
+			$method = "action_" . $action;
+			if(method_exists($this, $method)){
+				$this->action_response[$action] = $this->$method();
+				$player_id = null;
+				$game_id = null;
+				if(is_object($this->session->me)) $player_id = $this->session->me->getID();
+				if(is_object($this->game)) $game_id = $this->game->getID();
+				$sql = new SqlManager();
+				$new = array( "action_date" => date("Y-m-d H:i:s", time()), "action_name" => $action, "action_game" => $game_id, "action_player" => $player_id );
+				$sql->insert("action", $new);
 			}
 		}
+	}
+	
+	public function getActionResponse($action=null){
+		/**
+		 * Returns saved action response array
+		 * If action is specified, return just specified actions response!
+		 **/
+		 if($action){
+			 if(isset($this->action_response[$action])){
+			 	return $this->action_response[$action];
+			 }
+			 return;
+		 }
+		 return $this->action_response;
 	}
 	
 	public function isMe(Player $player){
@@ -101,23 +194,37 @@ class ConnectX {
 	}
 	
 	private function action_enterGame(){
-		$this->game->addPlayer($this->session->me);
+		return $this->game->addPlayer($this->session->me);
 	}
 	
 	private function action_leaveGame(){
-		$this->game->removePlayer($this->session->me);
+		return $this->game->removePlayer($this->session->me);
 	}
 	
 	private function action_startGame(){
-		$this->game->start();
+		return $this->game->start();
 	}
 	
 	private function action_stopGame(){
-		$this->game->stop();
+		return $this->game->stop();
 	}
 	
 	private function action_setStone(){
-		$this->game->setField($this->request['row'], $this->session->me->getID());
+		return $this->game->setField($this->request['row'], $this->session->me->getID());
+	}
+	
+	private function action_playerLogin(){
+		return $this->session->loginPlayer($this->post['username'], $this->post['password']);
+	}
+	
+	private function action_killMe(){
+		$this->action_playerLogout();
+	}
+	
+	private function action_playerLogout(){
+		session_regenerate_id();
+		$this->session = new Session();
+		return;
 	}
 	
 }

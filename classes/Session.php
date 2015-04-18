@@ -50,6 +50,7 @@ class Session {
 		 **/
 		$this->player = $id;
 		$this->me = new Player( $this->player );
+		$this->saveSession();
 	}
 	
 	public function getPlayerID(){
@@ -70,10 +71,9 @@ class Session {
 		} else {
 			$this->id = $load['session_id'];
 			$this->key = $load['session_key'];
-			$this->player = new Player( $load['session_player'] );
 		}
-		if(isset($_REQUEST['playerID'])){
-			$this->setPlayerID( $_REQUEST['playerID'] );
+		if($load['session_player'] > 0){
+			$this->setPlayerID( $load['session_player'] );
 			$this->saveSession();
 		}
 		$this->loadMeta();
@@ -135,6 +135,32 @@ class Session {
 		 * value: meta attributes value
 		 **/
 		Meta::remove("session", $this->id, $name, $value);
+	}
+	
+	public function loginPlayer($username, $password){
+		/**
+		 * Logs player into session (if username and password provided are correct!)
+		 **/
+		$return = array("messages");
+		if(!$username || !$password){
+			$return['messages'][] = array("type" => "error", "content" => "Well, you have to enter both unsername and password, you know!");
+			return $return;
+		}
+		$sql = new SqlManager();
+		$sql->setQuery("
+			SELECT player_id FROM player
+			WHERE player_username = '{{username}}'
+			AND player_password = '{{password}}'
+			");
+		$sql->bindParam("{{username}}", $username);
+		$sql->bindParam("{{password}}", $password);
+		$player = $sql->result();
+		if($player['player_id']){
+			$this->setPlayerID($player['player_id']);
+			return;
+		}
+		$return['messages'][] = array("type" => "error", "content" => "Nope! Have you forgotten your password, laddy?!");
+		return $return;
 	}
 		
 }
