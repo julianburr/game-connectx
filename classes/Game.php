@@ -68,8 +68,9 @@ class Game {
 		 * Parameters:
 		 * options: array with game options (meta information)
 		 **/
+		$this->createFieldSet();
 		$sql = new SqlManager();
-		$new = array( "game_status" => "waiting" );
+		$new = array( "game_status" => "waiting", "game_fieldset" => serialize($this->fieldset) );
 		$sql->insert("game", $new);
 		$this->id = $sql->getLastInsertID();
 		$this->addOptions($options);
@@ -642,6 +643,19 @@ class Game {
 			return true;
 		}
 		return false;
+	}
+	
+	public function getCanonicalUrl(){
+		$core = new ConnectX();
+		$url = $core->getProtocol() . "://" . $core->getDomain() . "/";
+		if($core->htaccess){
+			$url .= "game/" . $this->id;
+		} else {
+			$url .= $core->getRootDir() . "/core.php";
+			$sep = "?";
+			$url .= $sep . "page=game&gameID=" . $this->id;
+		}
+		return $url;
 	}
 	
 }
