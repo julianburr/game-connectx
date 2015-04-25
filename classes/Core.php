@@ -25,7 +25,7 @@ class ConnectX {
 	public $get = null;
 	public $post = null;
 	
-	private $htaccess = false;
+	public $htaccess = false;
 	
 	private $action_response = array();
 	
@@ -41,9 +41,10 @@ class ConnectX {
 	
 	public function init($game_id=null){
 		/**
-		 * Inits session and game, if game id is given
+		 * Inits session and game
 		 **/
 		$this->session = new Session();
+		$this->game = new Game($game_id);
 	}
 	
 	public function getCanonicalURL(){
@@ -52,14 +53,19 @@ class ConnectX {
 		 **/
 		$url = $this->getProtocol() . "://" . $this->getDomain() . "/";
 		if($this->htaccess){
-			if(isset($this->get['gameID'])){
-				$url .= "game/{$this->get['gameID']}";
+			if(isset($this->request['gameID'])){
+				$url .= "game/{$this->request['gameID']}";
+			} elseif(isset($this->get['page'])){
+				$url .= $this->get['page'];
 			}
 		} else {
 			$url .= $this->getRootDir() . "/core.php";
 			$sep = "?";
 			if(isset($this->get['gameID'])){
-				$url .= $sep . "page=game&gameID=" . $this->get['gameID'];
+				$url .= $sep . "page=game&gameID=" . $this->request['gameID'];
+				$sep = "&";
+			} elseif(isset($this->get['page'])){
+				$url .= $sep . "page=" . $this->get['page'];
 			}
 		}
 		return $url;
@@ -185,6 +191,22 @@ class ConnectX {
 		return false;
 	}
 	
+	public function getGames(){
+		/**
+		 * Return Game Objetcs of all games in the database
+		 **/
+		$sql = new SqlManager();
+		$sql->setQuery("SELECT game_id FROM game WHERE game_status != 'finished'");
+		$sql->execute();
+		
+		$games = array();
+		while($row = $sql->fetch()){
+			$games[] = new Game($row['game_id']);
+		}
+		
+		return $games;
+	}
+	
 	/*=======================================================================*/
 	/* In the following come the actions that can be called via HTTP request */
 	/*=======================================================================*/
@@ -222,9 +244,14 @@ class ConnectX {
 	}
 	
 	private function action_playerLogout(){
-		session_regenerate_id();
-		$this->session = new Session();
-		return;
+		return $this->session->logoutPlayer();
 	}
 	
+	private function action_playerSignUp(){
+		return $this->session->newPlayer($this->post['username'], $this->post['password'], $this->post['options']);
+	}
+	
+	private function action_createGame(){
+		return $this->game->create(array());
+	}
 }

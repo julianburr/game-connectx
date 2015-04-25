@@ -27,6 +27,8 @@ class Session {
 	public $player = null;
 	public $meta = array();
 	
+	private $salt = "";
+	
 	public function __construct(){
 		/**
 		 * Get session id and load session
@@ -153,7 +155,7 @@ class Session {
 			AND player_password = '{{password}}'
 			");
 		$sql->bindParam("{{username}}", $username);
-		$sql->bindParam("{{password}}", $password);
+		$sql->bindParam("{{password}}", md5($password . $this->salt));
 		$player = $sql->result();
 		if($player['player_id']){
 			$this->setPlayerID($player['player_id']);
@@ -161,6 +163,32 @@ class Session {
 		}
 		$return['messages'][] = array("type" => "error", "content" => "Nope! Have you forgotten your password, laddy?!");
 		return $return;
+	}
+	
+	public function logoutPlayer(){
+		/**
+		 * Regenerates session id to log player out
+		 **/
+		session_regenerate_id();
+		$this->session = new Session();
+		return;
+	}
+	
+	public function newPlayer($username, $password, array $options){
+		$sql = new SqlManager();
+		$sql->setQuery("
+			SELECT * FROM player
+			WHERE player_username = '{{username}}'
+			");
+		$sql->bindParam("{{username}}", $username);
+		$test = $sql->result();
+		if($test['player_id']){
+			$return['messages'][] = array("type" => "error", "content" => "Username already taken! Try to be a bit more creative!");
+			return $return;
+		}
+		$new = array("player_username" => $username, "player_password" => md5($password . $this->salt));
+		$sql->insert("player", $new);
+		$this->setPlayerID($sql->getLastInsertID());
 	}
 		
 }
