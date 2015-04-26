@@ -5,13 +5,14 @@
     <link rel="canonical" href="<?php echo $core->getCanonicalURL(); ?>">
     <title>Connect X</title>
     
-    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+	<script type="text/javascript" src="<?php echo $core->getBaseURL(); ?>files/js/jquery.min.js"></script>
     <script type="text/javascript" src="<?php echo $core->getBaseURL(); ?>files/js/main.js"></script>
     
     <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Nothing+You+Could+Do|The+Girl+Next+Door|Give+You+Glory' type='text/css'>
+    <link rel='stylesheet' href='<?php echo $core->getBaseURL(); ?>files/icomoon/style.css' type='text/css'>
 	<link rel='stylesheet' href='<?php echo $core->getBaseURL(); ?>files/css/main.css' type='text/css'>
 </head>
-<body lang="en" class="default game" data-game-id="<?php echo $core->game->getID(); ?>" data-last-action="<?php echo $core->game->getLastAction()->getID(); ?>" data-baseurl="<?php echo $core->getBaseURL(); ?>">
+<body lang="en" class="default game" data-player-id="<?php echo $core->session->me->getID(); ?>" data-game-id="<?php echo $core->game->getID(); ?>" data-last-action="<?php echo $core->game->getLastAction()->getID(); ?>" data-baseurl="<?php echo $core->getBaseURL(); ?>">
     <header id="head">
         <h1>Connect X</h1>
         <h2 class="subtitle">Play it like the real children</h2>
@@ -25,6 +26,7 @@
     <div id="panel">
     <div id="panel_inner">
     <div id="panel_inner_load">
+    	<a class="back" href="<?php echo $core->getPageUrl("gamelist"); ?>"><span class="border"><span class="icon icon-angle-left"></span> Back to Gamelist</span></a>
     
         <div class="border">
             <h3>Game #<?php echo $core->game->getID(); ?><span class="small status"><?php echo $core->game->getStatus(); ?></span></h3>
@@ -33,6 +35,7 @@
         <ul class="playerlist">
         <?php
         
+		$playercnt = 0;
         foreach($core->game->getPlayers() as $player){
             $class = "player";
             if($core->isMe($player)){
@@ -50,7 +53,12 @@
             }
             echo " <span class='score'>{$core->game->getScore($player)}</span>";
             echo "</div></li>";
+			$playercnt++;
         }
+		
+		if($playercnt == 0){
+			echo "<li class='noplayers'><div class='border'>No players found!</div></li>";
+		}
         
         ?>
         </ul>
@@ -106,7 +114,7 @@
         
         $field = $core->game->getFieldSet();
         foreach($field as $x => $inner){
-            echo "<ul>";
+            echo "<ul class='row_{$x}'>";
             for($y=count($inner)-1; $y>=0; $y--){
                 echo "<li data-field-x='{$x}' data-field-y='{$y}'>";
                 if($field[$x][$y]->getPlayer()->getID()){
@@ -117,7 +125,7 @@
                         echo "<span class='stone stone_player stone_player_{$id}'>{$id}</span>";
                     }
                 } else {
-                    if($core->isMe($core->game->getCurrentPlayer()) && !$core->game->isWon()){
+                    if(!is_null($core->game->getCurrentPlayer()) && $core->isMe($core->game->getCurrentPlayer()) && !$core->game->isWon()){
                         $href = $core->getCanonicalUrl() . "?do[]=setStone&row={$x}";
                         echo "<a class='stone pick_stone' href='{$href}'>SET STONE</a>";
                     } else {
