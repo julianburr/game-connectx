@@ -1,0 +1,21 @@
+@charset "utf-8";
+
+@font-face {
+  font-family: 'Give You Glory';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Give You Glory'), local('GiveYouGlory'), url(../fonts/DFEWZFgGmfseyIdGRJAxuBcAUOYGvnPYlcaEKgTjjG0.woff2) format('woff2'), url(../fonts/DFEWZFgGmfseyIdGRJAxuJre1ArFO0nxyUXZnjCjpOg.woff) format('woff');
+}
+@font-face {
+  font-family: 'Nothing You Could Do';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Nothing You Could Do'), local('NothingYouCouldDo'), url(../fonts/jpk1K3jbJoyoK0XKaSyQAW3tIVbDRfcAbwPiWONb82U.woff2) format('woff2'), url(../fonts/jpk1K3jbJoyoK0XKaSyQAZsYoLsUhJo8DEpooYVMXYU.woff) format('woff');
+}
+@font-face {
+  font-family: 'The Girl Next Door';
+  font-style: normal;
+  font-weight: 400;
+  src: local('The Girl Next Door'), local('TheGirlNextDoor'), url(../fonts/cWRA4JVGeEcHGcPl5hmX7o557jP5Jw7yyYX-haUHVlM.woff2) format('woff2'), url(../fonts/cWRA4JVGeEcHGcPl5hmX7rOFxJ5Ig03puUh67ume3us.woff) format('woff');
+}
+
