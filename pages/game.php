@@ -8,7 +8,7 @@
 	<script type="text/javascript" src="<?php echo $core->getBaseURL(); ?>files/js/jquery.min.js"></script>
     <script type="text/javascript" src="<?php echo $core->getBaseURL(); ?>files/js/main.js"></script>
     
-    <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Nothing+You+Could+Do|The+Girl+Next+Door|Give+You+Glory' type='text/css'>
+    <link rel='stylesheet' href='<?php echo $core->getBaseURL(); ?>files/css/fonts.css' type='text/css'>
     <link rel='stylesheet' href='<?php echo $core->getBaseURL(); ?>files/icomoon/style.css' type='text/css'>
 	<link rel='stylesheet' href='<?php echo $core->getBaseURL(); ?>files/css/main.css' type='text/css'>
 </head>

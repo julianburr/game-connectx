@@ -4,8 +4,10 @@
 	<meta charset="utf-8" />
     <title>Connect X - 404</title>
     
-    <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Nothing+You+Could+Do|The+Girl+Next+Door|Give+You+Glory' type='text/css'>
-	<link rel='stylesheet' href='<?php echo $core->getBaseURL(); ?>files/css/exception.css' type='text/css'>
+    <script type="text/javascript" src="<?php echo $core->getBaseURL(); ?>files/js/jquery.min.js"></script>
+    
+    <link rel='stylesheet' href='<?php echo $core->getBaseURL(); ?>files/css/fonts.css' type='text/css'>
+    <link rel='stylesheet' href='<?php echo $core->getBaseURL(); ?>files/css/exception.css' type='text/css'>
 </head>
 <body lang="en">
 	<h1>You look lost!</h1>
