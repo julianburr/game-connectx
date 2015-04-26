@@ -1,0 +1,177 @@
+@font-face {
+	font-family: 'icomoon';
+	src:url('fonts/icomoon.eot?y3dqr9');
+	src:url('fonts/icomoon.eot?#iefixy3dqr9') format('embedded-opentype'),
+		url('fonts/icomoon.woff?y3dqr9') format('woff'),
+		url('fonts/icomoon.ttf?y3dqr9') format('truetype'),
+		url('fonts/icomoon.svg?y3dqr9#icomoon') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+	font-family: 'icomoon';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.icon-clock-o:before {
+	content: "\f017";
+}
+
+.icon-repeat:before {
+	content: "\f01e";
+}
+
+.icon-rotate-right:before {
+	content: "\f01e";
+}
+
+.icon-refresh:before {
+	content: "\f021";
+}
+
+.icon-image:before {
+	content: "\f03e";
+}
+
+.icon-photo:before {
+	content: "\f03e";
+}
+
+.icon-picture-o:before {
+	content: "\f03e";
+}
+
+.icon-chevron-left:before {
+	content: "\f053";
+}
+
+.icon-chevron-right:before {
+	content: "\f054";
+}
+
+.icon-plus-circle:before {
+	content: "\f055";
+}
+
+.icon-minus-circle:before {
+	content: "\f056";
+}
+
+.icon-times-circle:before {
+	content: "\f057";
+}
+
+.icon-check-circle:before {
+	content: "\f058";
+}
+
+.icon-question-circle:before {
+	content: "\f059";
+}
+
+.icon-info-circle:before {
+	content: "\f05a";
+}
+
+.icon-times-circle-o:before {
+	content: "\f05c";
+}
+
+.icon-check-circle-o:before {
+	content: "\f05d";
+}
+
+.icon-ban:before {
+	content: "\f05e";
+}
+
+.icon-exclamation-triangle:before {
+	content: "\f071";
+}
+
+.icon-warning:before {
+	content: "\f071";
+}
+
+.icon-chevron-up:before {
+	content: "\f077";
+}
+
+.icon-chevron-down:before {
+	content: "\f078";
+}
+
+.icon-camera-retro:before {
+	content: "\f083";
+}
+
+.icon-key:before {
+	content: "\f084";
+}
+
+.icon-cogs:before {
+	content: "\f085";
+}
+
+.icon-gears:before {
+	content: "\f085";
+}
+
+.icon-trophy:before {
+	content: "\f091";
+}
+
+.icon-rotate-left:before {
+	content: "\f0e2";
+}
+
+.icon-undo:before {
+	content: "\f0e2";
+}
+
+.icon-lightbulb-o:before {
+	content: "\f0eb";
+}
+
+.icon-angle-double-left:before {
+	content: "\f100";
+}
+
+.icon-angle-double-right:before {
+	content: "\f101";
+}
+
+.icon-angle-double-up:before {
+	content: "\f102";
+}
+
+.icon-angle-double-down:before {
+	content: "\f103";
+}
+
+.icon-angle-left:before {
+	content: "\f104";
+}
+
+.icon-angle-right:before {
+	content: "\f105";
+}
+
+.icon-angle-up:before {
+	content: "\f106";
+}
+
+.icon-angle-down:before {
+	content: "\f107";
+}
+
