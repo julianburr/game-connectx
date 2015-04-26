@@ -18,6 +18,7 @@
 class Player {
 	
 	private $id = null;
+	private $username = null;
 	private $loaded = false;
 	
 	private $meta = array();
@@ -43,6 +44,7 @@ class Player {
 			throw new Exception("Player '#{$this->id}' not found!");
 		} else {
 			$this->loaded = true;
+			$this->username = $load['player_username'];
 			$this->loadMeta();
 		}
 	}
@@ -116,6 +118,9 @@ class Player {
 		 **/
 		if(isset($this->meta['name'][0])){
 			return $this->meta['name'][0];
+		}
+		if(!is_null($this->username)){
+			return $this->username;
 		}
 		return "Player#" . $this->id;
 	}

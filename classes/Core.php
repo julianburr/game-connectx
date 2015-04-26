@@ -71,6 +71,27 @@ class ConnectX {
 		return $url;
 	}
 	
+	public function getPageURL($page, $pageID=null){
+		$url = $this->getProtocol() . "://" . $this->getDomain() . "/";
+		if($this->htaccess){
+			if(!is_null($pageID)){
+				$url .= "{$page}/{$pageID}";
+			} elseif(isset($this->get['page'])){
+				$url .= $page;
+			}
+		} else {
+			$url .= $this->getRootDir() . "/core.php";
+			$sep = "?";
+			if(!is_null($pageID)){
+				$url .= $sep . "page={$page}&{$page}ID={$pageID}";
+				$sep = "&";
+			} elseif(isset($this->get['page'])){
+				$url .= $sep . "page={$page}";
+			}
+		}
+		return $url;
+	}
+	
 	public function checkHtaccess(){
 		/**
 		 * Checks if .htaccess is set up and if game is in root dir
@@ -152,7 +173,6 @@ class ConnectX {
 			$this->action_response = array();
 			$method = "action_" . $action;
 			if(method_exists($this, $method)){
-				$this->action_response[$action] = $this->$method();
 				$player_id = null;
 				$game_id = null;
 				if(is_object($this->session->me)) $player_id = $this->session->me->getID();
@@ -160,6 +180,7 @@ class ConnectX {
 				$sql = new SqlManager();
 				$new = array( "action_date" => date("Y-m-d H:i:s", time()), "action_name" => $action, "action_game" => $game_id, "action_player" => $player_id );
 				$sql->insert("action", $new);
+				$this->action_response[$action] = $this->$method($sql->getLastInsertID());
 			}
 		}
 	}
@@ -215,35 +236,37 @@ class ConnectX {
 		var_dump($this);
 	}
 	
-	private function action_enterGame(){
+	private function action_enterGame($key){
 		return $this->game->addPlayer($this->session->me);
 	}
 	
-	private function action_leaveGame(){
+	private function action_leaveGame($key){
 		return $this->game->removePlayer($this->session->me);
 	}
 	
-	private function action_startGame(){
+	private function action_startGame($key){
 		return $this->game->start();
 	}
 	
-	private function action_stopGame(){
+	private function action_stopGame($key){
 		return $this->game->stop();
 	}
 	
-	private function action_setStone(){
+	private function action_setStone($key){
+		$sql = new SqlManager();
+		$sql->update("action", array("action_id"=>$key, "action_args"=>serialize(array($this->request['row'], $this->session->me->getID()))));
 		return $this->game->setField($this->request['row'], $this->session->me->getID());
 	}
 	
-	private function action_playerLogin(){
+	private function action_playerLogin($key){
 		return $this->session->loginPlayer($this->post['username'], $this->post['password']);
 	}
 	
-	private function action_killMe(){
+	private function action_killMe($key){
 		$this->action_playerLogout();
 	}
 	
-	private function action_playerLogout(){
+	private function action_playerLogout($key){
 		return $this->session->logoutPlayer();
 	}
 	

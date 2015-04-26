@@ -81,8 +81,32 @@ body {
 	color:#eee;
 }
 
+#panel a.back .border {
+	padding:10px 20px;
+}
+
+#panel a.back .icon {
+	font-size:120%;
+	margin:1px 7px 0 0;
+	display:inline-block;
+	float:left;
+}
+
+#panel a.back {
+	background:none #191919;
+	width:100%; 
+	float:left;
+	color:#555;
+}
+
+#panel a.back:hover {
+	color:#fff;
+}
+
 #panel .playerlist,
-#panel .playerlist li {
+#panel .playerlist li,
+#panel .gamelist,
+#panel .gamelist li {
 	width:100%;
 	float:left;
 	margin:0;
@@ -90,7 +114,24 @@ body {
 	list-style:none;
 }
 
-#panel .playerlist li {
+#panel .playerlist,
+#panel .gamelist {
+	margin-top:-10px;
+}
+
+#panel .gamelist li a {
+	color:#ddd;
+	width:100%;
+	float:left;
+}
+
+#panel .gamelist li a:hover {
+	color:#fff;
+	background:none #333;
+}
+
+#panel .playerlist li,
+#panel .gamelist li {
 	font-size:120%;
 }
 
@@ -98,16 +139,19 @@ body {
 	background:none #393;
 }
 
-#panel .playerlist li .border {
+#panel .playerlist li .border,
+#panel .gamelist li .border {
 	padding:7px 20px;
 }
 
-#panel .playerlist span.status {
+#panel .playerlist span.status,
+#panel .gamelist span.status {
 	opacity:0.5;
 	margin:0 0 0 10px;
 }
 
-#panel .playerlist .score {
+#panel .playerlist .score,
+#panel .gamelist .playercnt {
 	float:right;
 	font-size:120%;
 	font-weight:bold;

@@ -121,6 +121,14 @@ class Game {
 		}
 	}
 	
+	public function pause(){
+		/**
+		 * Pause current game 
+		 **/
+		$this->setStatus("paused");
+		$this->save();
+	}
+	
 	public function stop(){
 		/**
 		 * Stop current game
@@ -369,7 +377,7 @@ class Game {
 		 * player: id of to be assigned to field
 		 **/
 		$stone_set = false;
-		if($player != $this->players[$this->current_player_key]->getID()){
+		if($this->getPlayerCount() == 0 || $player != $this->players[$this->current_player_key]->getID()){
 			throw new Exception("Whoa, wait ... it's not your turn!");
 		}
 		for($i=0; $i<count($this->fieldset[$row]); $i++){
@@ -391,14 +399,21 @@ class Game {
 		/**
 		 * Get player object of current player (the one whose turn it is)
 		 **/
-		return $this->players[$this->current_player_key];
+		if($this->getPlayerCount() > 0 && $this->status == "running"){
+			return $this->players[$this->current_player_key];
+		} else {
+			return null;
+		}
 	}
 	
 	public function getCurrentPlayerID(){
 		/**
 		 * Get id of current player
 		 **/
-		return $this->players[$this->current_player_key]->getID();
+		if($this->status == "running"){
+			return $this->players[$this->current_player_key]->getID();
+		} 
+		return null;
 	}
 	
 	public function getNextPlayer(){
@@ -614,6 +629,35 @@ class Game {
 		 **/
 		$this->getLastAction();
 		return $this->last_action->getID();
+	}
+	
+	public function getActions($from, $to=null){
+		/**
+		 * Get actions from specified action key to optional
+		 * second action key
+		 **/
+		$sql = new SqlManager();
+		$sql->setQuery("SELECT * FROM action WHERE action_id > {{from}} AND action_game = {{game}}");
+		if(!is_null($to)){
+			$sql->setQuery("SELECT * FROM action WHERE action_id > {{from}} AND action_id < {{to}} AND action_game = {{game}}");	
+		}
+		$sql->bindParam("{{from}}", $from, "int");
+		$sql->bindParam("{{to}}", $to, "int");
+		$sql->bindParam("{{game}}", $this->id, "int");
+		$sql->execute();
+		
+		$actions = array();
+		$actions['actioncnt'] = 0;
+		$actions['actions'] = array();
+		while($row = $sql->fetch()){
+			$unserialize = unserialize($row['action_args']);
+			if($row['action_args'] === 'b:0;' || $unserialize !== false) {
+				$row['action_args'] = $unserialize;
+			}
+			$actions['actions'][] = $row;
+			$actions['actioncnt']++;
+		}
+		return $actions;
 	}
 	
 	public function getScore(Player $player){

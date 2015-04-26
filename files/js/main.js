@@ -1,5 +1,9 @@
 $(document).ready(function(){
 	
+	var player_id = $("body").attr("data-player-id");
+	var baseurl = $("body").attr("data-baseurl");
+	var canonical_url = $("link[rel=canonical]").attr("href");
+	
 	function initWidthHeight(){
 		var inner_width = 0;
 		$("#field ul").each(function(){
@@ -25,10 +29,94 @@ $(document).ready(function(){
 	function loadContent(href){
 		$.ajax({
 			url: href
-		}).done(function( data ) {
-			console.log(data);
+		}).done(function(data){
 			$("#field_inner").load(canonical_url + " #field_inner_load");
 			$("#panel_inner").load(canonical_url + " #panel_inner_load");
+			$.ajax({
+				url: baseurl + "functions/ajax.php",
+				data: {
+					'class' : 'Game',
+					'classID' : $("body").attr("data-game-id"),
+					'method' : 'getLastActionID'
+				},
+				dataType: "json"
+			}).done(function(json){
+				if(json.response > 0){
+					$("body").attr("data-last-action", json.response);
+				}
+			});
+		});
+	}
+	
+	function pollActions(){
+		var last_action = $("body").attr("data-last-action");
+		$.ajax({
+			url: baseurl + "functions/ajax.php",
+			data: {
+					'class' : 'Game',
+					'classID' : $("body").attr("data-game-id"),
+					'method' : 'getActions',
+					'args[]' : last_action
+			},
+			dataType: "json"
+		}).done(function(json){
+			if(json.actioncnt > 0){
+				console.log("ACTIONS FOUND", json.actioncnt);
+				console.log(json);
+				$.when( doActions(json) ).done(function(){
+					loadContent(canonical_url);
+				});
+			}
+			
+		});	
+	}
+	
+	function doActions(obj){
+		for(var i=0; i<obj.actioncnt; i++){
+			var action = obj.actions[i].action_name;
+			switch(action){
+				case "setStone":
+					if(obj.actions[i].action_args.length = 2){
+						var action_row = obj.actions[i].action_args[0];
+						var action_player = obj.actions[i].action_args[1];
+						console.log("ARGS", obj.actions[i].action_args);
+						var link_obj = $("#field ul.row_" + action_row).find("li:first").find("span.stone_noplayer");
+						console.log(link_obj.length);
+						if(link_obj.length > 0){
+							action_setStone(link_obj, action_player);
+						}
+					}
+					break;
+				default: break;
+			}
+		}	
+	}
+	
+	function action_setStone(clicked, player){
+		console.log("HERE COMES AN ANIMATION");
+		var findme = "a";
+		if(clicked.hasClass("stone_noplayer")){
+			findme = "span.stone_noplayer";
+		}
+		var lastfield = clicked.closest("ul").find("li:last");
+		var lastlink = lastfield.find(findme);
+		while(lastlink.length == 0){
+			lastfield = lastfield.prev("li");
+			lastlink = lastfield.find(findme);
+		}
+		console.log("LAST FIELD", lastfield, lastlink);
+		var top = lastfield.height() / 2;
+		var left = lastfield.width()/2;
+		lastfield.append("<span class='animated_stone stone stone_player stone_player_" + player + "' style='opacity:0; position:absolute; width:100%; height:100%; z-index:100; top:" + top + "px; left:" + top + "px; width:1px; height:1px;'>" + player + "</span>");
+		$(".animated_stone").animate({ 
+			"opacity":1,
+			"width":"100%",
+			"height":"100%",
+			"left":0,
+			"top":0
+		}, 500, function(){
+			$(this).css({ "position":"relative" });
+			lastfield.find(findme).remove();
 		});
 	}
 	
@@ -37,11 +125,11 @@ $(document).ready(function(){
 		initWidthHeight();
 	});
 	
-	var canonical_url = $("link[rel=canonical]").attr("href");
-	console.log("canonical", canonical_url);
-	
 	$("#field").on("click", "a", function(){
-		loadContent($(this).attr("href"));
+		var clicked = $(this);
+		$.when( action_setStone(clicked, player_id) ).done(function(){
+			loadContent(clicked.attr("href"));
+		});
 		return false;
 	});
 	
@@ -51,23 +139,7 @@ $(document).ready(function(){
 	});
 	
 	var polling = setInterval(function(){
-		var last_action = $("body").attr("data-last-action");
-		var baseurl = $("body").attr("data-baseurl");
-		$.ajax({
-			url: baseurl + "functions/ajax.php",
-			data: {
-					class : 'Game',
-					classID : $("body").attr("data-game-id"),
-					method : 'getLastActionID'
-			},
-			dataType: "json"
-		}).done(function(json){
-			if(last_action < json.response){
-				$("body").attr("data-last-action", json.response)
-				console.log("last_action", last_action, "response", json.response);
-				loadContent(canonical_url);
-			}
-		});
-	}, 1000);
-	
+		pollActions();
+	}, 2000);
+
 });
