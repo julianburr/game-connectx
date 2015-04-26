@@ -27,6 +27,7 @@ $(document).ready(function(){
 	}
 	
 	function loadContent(href){
+		clearInterval(polling);
 		$.ajax({
 			url: href
 		}).done(function(data){
@@ -44,6 +45,9 @@ $(document).ready(function(){
 				if(json.response > 0){
 					$("body").attr("data-last-action", json.response);
 				}
+				polling = setInterval(function(){
+					pollActions();
+				}, 2000);
 			});
 		});
 	}
