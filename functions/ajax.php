@@ -41,7 +41,14 @@ try {
 	}
 
 	//Call method and save response
-	$response = $instance->$_REQUEST['method']();
+	$args = array();
+	if(isset($_REQUEST['args'])){
+		$args = $_REQUEST['args'];
+	}
+	if(!is_array($args)){
+		$args = array(0 => $args);
+	}
+	$response = call_user_func_array(array($instance, $_REQUEST['method']), $args);
 	
 } catch(Exception $e){
 	
@@ -57,8 +64,4 @@ if(!is_array($response)){
 }
 
 //Write JSON from array
-echo "{\n";
-foreach($response as $key => $value){
-	echo "\t\"{$key}\" : \"{$value}\"\n";
-}
-echo "}";
+echo json_encode($response);
